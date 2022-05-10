@@ -11,7 +11,7 @@ console.log(products);}
 
 module.exports = {
 	index: (req, res) => {
-		res.render('products', {products});
+		res.render('products', {products,toThousand});
 	},
 	detail: (req, res) => {
 
@@ -20,10 +20,10 @@ module.exports = {
 				producto_encontrado = products[i];
 			}
 		}
-		res.render('detail', {producto_encontrado});
+		res.render('detail', {producto_encontrado,toThousand});
 		
 	},
-	create: (req, res) => {
+	create: (req, res) => { 
 		res.render('product-create-form')
 	},
 	
@@ -36,7 +36,8 @@ module.exports = {
 			price:price,                              //Tambien se puede hacer let NewProduct = { id:17, ...req}(...req toma todas las propiedades)
 			discount:discount,
 			category:category,
-			description:description
+			description:description,
+			image:req.file.filename
 		};
 		
 		products.push(newProduct);
@@ -51,23 +52,35 @@ module.exports = {
 				producto_encontrado = products[i];
 			}
 		}
-		res.render('product-edit-form', {producto_encontrado});// Do the magic
+		res.render('product-edit-form', {producto_encontrado,toThousand});// Do the magic
 	},
 	// Update - Method to update
 	update: (req, res) => {
-		console.log(req.body);
-	},
-
-	// Delete - Delete one product from DB
-	destroy : (req, res) => {
 		for (let i = 0; i < products.length; i++) {
 			if (products[i].id == req.params.id) {
 				producto_encontrado = products[i];
 			}
 		}
-		
-		products.splice(producto_encontrado-1,1);
+		console.log(req.body);
+		const {name,price,discount,category,description} = req.body
+		products.forEach(function(product) {
+			if (product.id === producto_encontrado.id) {
+				product.id = producto_encontrado.id;
+				product.name = name;
+				product.price = price;
+				product.discount = discount;
+				product.category = category;
+				product.description = description;
+			}
+		});
 		guardar(products);
+		res.redirect('/products');
+	},
+
+	// Delete - Delete one product from DB
+	destroy : (req, res) => {
+		const newProducts = products.filter(producto => producto.id != req.params.id);
+		guardar(newProducts);
 		res.redirect('/products');
 	}
 };

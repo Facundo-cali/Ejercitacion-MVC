@@ -11,7 +11,7 @@
 	<div class="container products-wrapper">
 		<div class="row">
 			<div class="col-12">
-				<h2 class="products-title">Detalle del producto: NOMBRE DEL PRODUCTO</h2>
+				<h2 class="products-title">Detalle del producto: <%=producto_encontrado.name%></h2>
 			</div>
 		</div>
 		<div class="product-detail">
@@ -29,12 +29,12 @@
 						</h2>
 						
 							<p class="product-detail-price small">
-								<span></span>
+								<span>$ <%= toThousand(producto_encontrado.price) %> </span><br>
 								
 								<b><%= producto_encontrado.discount %> % off</b>
 							</p>
 							<p class="product-detail-price">
-								<%= producto_encontrado.price %> 
+								$ <%= toThousand(producto_encontrado.price) %> 
 							</p>
 
 						<ul class="actions-list">
